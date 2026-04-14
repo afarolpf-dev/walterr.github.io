@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>M3RNİS SYSTEM | Premium Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #05070a;
+            font-family: 'Inter', sans-serif;
+            color: #edf2ff;
+            overflow-x: hidden;
+        }
+
+        /* Mobil önce yaklaşımı */
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* HEADER / ÜST BİLGİ */
+        .header {
+            background: linear-gradient(135deg, #0a0f1a 0%, #070b12 100%);
+            padding: 16px 20px;
+            border-bottom: 1px solid #1f2a3e;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo p {
+            font-size: 0.65rem;
+            color: #6b7c9e;
+            margin-top: 2px;
+        }
+
+        .user-card {
+            background: rgba(31, 41, 55, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #2d3a52;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .premium-badge {
+            background: linear-gradient(145deg, #7c3aed, #4c1d95);
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .level {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        /* ANNOUNCEMENT */
+        .announcement {
+            background: #0f1420;
+            margin: 16px 16px 0 16px;
+            padding: 14px 18px;
+            border-radius: 20px;
+            border-left: 4px solid #f97316;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.75rem;
+        }
+
+        .date {
+            background: #1e293b;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+        }
+
+        /* MENU BUTTON (MOBILE HAMBURGER) */
+        .menu-toggle {
+            display: none;
+            background: #1a1f2e;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            padding: 8px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+
+        /* SIDEBAR - Mobilde slide, desktop'ta sabit */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: #0b0f18;
+            z-index: 1000;
+            transition: 0.3s ease;
+            overflow-y: auto;
+            border-right: 1px solid #1f2a44;
+            padding-bottom: 30px;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .close-sidebar {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid #1e2a3a;
+            margin-bottom: 16px;
+        }
+
+        .menu-category {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            padding: 16px 20px 6px 20px;
+            color: #6f7c9b;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 2px 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #cbd5e1;
+        }
+
+        .menu-item i {
+            width: 24px;
+        }
+
+        .menu-item:active {
+            background: #1e2a3e;
+            transform: scale(0.98);
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            padding: 20px 16px 80px 16px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 20px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .tool-card {
+            background: #0f131e;
+            border: 1px solid #1e293b;
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .tool-card:active {
+            transform: scale(0.98);
+        }
+
+        .card-header {
+            background: #0a0e16;
+            padding: 14px 18px;
+            font-weight: 700;
+            font-size: 1rem;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-buttons {
+            padding: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tool-btn {
+            background: #131a26;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: 0.1s;
+            flex: 1 0 auto;
+            text-align: center;
+        }
+
+        .tool-btn.free {
+            background: #1e293b;
+            color: #94a3b8;
+        }
+
+        .tool-btn.premium {
+            background: linear-gradient(135deg, #2d1b4e, #1a1035);
+            border: 1px solid #6d28d9;
+        }
+
+        .result-box {
+            margin: 8px 14px 14px 14px;
+            background: #06080f;
+            border-radius: 16px;
+            padding: 12px;
+            font-size: 0.7rem;
+            color: #b9c3db;
+            display: none;
+            border-left: 3px solid #7c3aed;
+        }
+
+        .gsm-input-row {
+            display: flex;
+            gap: 8px;
+            padding: 8px 14px 14px 14px;
+        }
+
+        .gsm-input-row input {
+            flex: 1;
+            background: #0a0e16;
+            border: 1px solid #2d3a52;
+            padding: 10px 14px;
+            border-radius: 40px;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .gsm-input-row button {
+            background: #3b2c5e;
+            border: none;
+            padding: 0 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.65rem;
+            color: #3e4a66;
+            margin-top: 40px;
+            padding: 16px;
+            border-top: 1px solid #16202e;
+        }
+
+        @media (min-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            .sidebar {
+                position: relative;
+                left: 0;
+                width: 260px;
+                height: auto;
+                border-right: none;
+                display: block;
+                transition: none;
+            }
+            .overlay, .close-sidebar {
+                display: none;
+            }
+            .main {
+                padding: 20px 28px;
+            }
+            .flex-layout {
+                display: flex;
+            }
+            .menu-toggle {
+                display: none;
+            }
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .flex-layout {
+                display: block;
+            }
+            .menu-toggle {
+                display: flex;
+                background: #1e2a3a;
+                padding: 8px 16px;
+                border-radius: 40px;
+                font-size: 1rem;
+                gap: 8px;
+                align-items: center;
+            }
+            .sidebar {
+                position: fixed;
+            }
+        }
+
+        i, .tool-btn {
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="overlay" id="overlay"></div>
+<div class="flex-layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <button class="close-sidebar" id="closeSidebarBtn"><i class="fas fa-times"></i></button>
+        <div class="sidebar-logo">
+            <h2 style="background: linear-gradient(135deg,#c084fc,#3b82f6); -webkit-background-clip:text; background-clip:text; color:transparent;">M3RNİS SYSTEM</h2>
+            <span style="font-size:0.7rem; color:#6c7f9e;">v2.0 | premium erişim</span>
+        </div>
+        <div class="menu-category">PANEL</div>
+        <div class="menu-item"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
+        <div class="menu-item"><i class="fas fa-chart-simple"></i> Sıralama</div>
+        <div class="menu-category">SORGULAMA MODÜLLERİ</div>
+        <div class="menu-item"><i class="fas fa-id-card"></i> Kimlik Bilgi</div>
+        <div class="menu-item"><i class="fas fa-mobile-alt"></i> GSM Çözümleri</div>
+        <div class="menu-item"><i class="fas fa-map-marker-alt"></i> Adres & Konum</div>
+        <div class="menu-item"><i class="fas fa-car"></i> Araç & Plaka</div>
+        <div class="menu-item"><i class="fas fa-file-invoice"></i> Maliye & SGK</div>
+        <div class="menu-item"><i class="fas fa-university"></i> Banka IBAN</div>
+        <div class="menu-item"><i class="fas fa-landmark"></i> Tapu & Arazi</div>
+        <div class="menu-item"><i class="fas fa-hospital-user"></i> Sağlık & MEB</div>
+        <div class="menu-item"><i class="fas fa-cog"></i> Hesap Ayarları</div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="container" style="flex:1;">
+        <div class="header">
+            <div class="header-top">
+                <div class="logo">
+                    <h1>M3RNİS SYSTEM</h1>
+                    <p>Gelişmiş Veri Platformu • Demo</p>
+                </div>
+                <button class="menu-toggle" id="menuToggleBtn"><i class="fas fa-bars"></i> MENÜ</button>
+                <div class="user-card">
+                    <i class="fas fa-user-astronaut"></i>
+                    <div>
+                        <div class="user-name">1gNvtvw</div>
+                        <div class="level">LVL 1 • 0 XP</div>
+                    </div>
+                    <div class="premium-badge"><i class="fas fa-gem"></i> PREMIUM</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="announcement">
+            <span><i class="fas fa-info-circle"></i> Menü sol taraftadır | Tüm sorgular DEMO verilerdir, gerçek bilgi içermez.</span>
+            <span class="date"><i class="far fa-calendar-alt"></i> 08 Nis 2026, 22:17</span>
+        </div>
+
+        <div class="main">
+            <div class="section-title"><i class="fas fa-dragon"></i> AKTİF MODÜLLER</div>
+            <div class="tools-grid" id="toolsGrid"></div>
+            <div class="footer-note">
+                <i class="fas fa-shield-alt"></i> M3RNİS SYSTEM Demo • Tüm veriler simüledir. Yasal kullanım için test ortamı.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Kategori ve tool tanımları
+    const modules = [
+        { name: "Bilgi Sistem", icon: "fa-check-circle", color: "#22c55e", tools: [
+            { label: "TC Bilgi [FREE]", action: "tcbilgi", type: "free" },
+            { label: "Ad Soyad Bilgi [FREE]", action: "adsoyad", type: "free" }
+        ]},
+        { name: "Ek Araçlar", icon: "fa-star", color: "#eab308", tools: [
+            { label: "Link Canlı Konum [NEW]", action: "live-location", type: "premium" },
+            { label: "Kimlik Arşivi Pro", action: "kimlikarsivi", type: "premium" }
+        ]},
+        { name: "Kişi Sorgu (TR)", icon: "fa-users", color: "#8b5cf6", tools: [
+            { label: "Ad İle Bilgi", action: "adile", type: "premium" },
+            { label: "Ad Soyad Pro", action: "adsoyadpro", type: "premium" },
+            { label: "Aile Pro Bilgi", action: "ailepro", type: "premium" }
+        ]},
+        { name: "GSM Çözümleri", icon: "fa-sim-card", color: "#10b981", tools: [
+            { label: "GSM -> TC", action: "gsm2tc", type: "premium" },
+            { label: "TC -> GSM", action: "tc2gsm", type: "premium" },
+            { label: "Güncel GSM -> TC", action: "guncelgsm", type: "premium" },
+            { label: "SMS Bomber Pro", action: "smsbomber", type: "premium" }
+        ], hasInput: true },
+        { name: "Maliye & SGK", icon: "fa-chart-line", color: "#f97316", tools: [
+            { label: "Nace Kodu Sorgu", action: "nace", type: "premium" },
+            { label: "İşyeri Arkadaşı", action: "isyeriark", type: "premium" },
+            { label: "İşyeri Bilgi", action: "isyeribilgi", type: "premium" }
+        ]},
+        { name: "Adres & Konum", icon: "fa-location-dot", color: "#3b82f6", tools: [
+            { label: "Güncel Adres", action: "gunceladres", type: "premium" },
+            { label: "Güncel Hane", action: "guncelhane", type: "premium" },
+            { label: "Vergi No -> Adres", action: "verginoadres", type: "premium" }
+        ]},
+        { name: "Arazi & Tapu", icon: "fa-draw-polygon", color: "#a855f7", tools: [
+            { label: "Tapu Bilgi", action: "tapubilgi", type: "premium" },
+            { label: "Ada Parsel -> TC", action: "adaparsel", type: "premium" }
+        ]},
+        { name: "Banka (IBAN)", icon: "fa-credit-card", color: "#ec489a", tools: [
+            { label: "IBAN Çözümle V1", action: "ibanv1", type: "premium" },
+            { label: "IBAN Çözümle V2", action: "ibanv2", type: "premium" }
+        ]},
+        { name: "Vesika", icon: "fa-id-card", color: "#14b8a6", tools: [
+            { label: "Ehliyet Vesika", action: "ehliyet", type: "premium" },
+            { label: "E Okul Vesika", action: "eokul", type: "premium" }
+        ]},
+        { name: "Araç & Plaka", icon: "fa-truck", color: "#f43f5e", tools: [
+            { label: "Plakadan Kişi", action: "plakakisi", type: "premium" },
+            { label: "TC'den Araç", action: "tcdenarac", type: "premium" },
+            { label: "Plakadan Ceza", action: "plakaceza", type: "premium" },
+            { label: "Plakadan Araç Foto", action: "plakafoto", type: "premium" }
+        ]},
+        { name: "Sağlık & Meb", icon: "fa-hospital-user", color: "#06b6d4", tools: [
+            { label: "Aşı Sorgu", action: "asisorgu", type: "premium" },
+            { label: "Engelli Rapor", action: "engelli", type: "premium" },
+            { label: "Rapor Sorgu", action: "rapor", type: "premium" },
+            { label: "Kimlik Oluşturucu", action: "kimlikolustur", type: "premium" }
+        ]}
+    ];
+
+    // Demo cevap verileri
+    function getDemoResponse(action, inputVal = "") {
+        const data = {
+            tcbilgi: "✅ TC: 12345678901 | Ad: MEHMET DEMİR | Baba adı: ALİ | D.Y: 1990",
+            adsoyad: "✅ AHMET YILMAZ - TC: 10987654321, 1995 İstanbul",
+            'live-location': "📍 CANLI KONUM LİNKİ: https://m3rnis.demo/loc/abc123 (demo)",
+            kimlikarsivi: "📁 Arşiv: 24 kayıt - Ali, Ayşe, Mehmet, Zeynep...",
+            adile: "👤 Ad ile: Emre Can, Emre Kaya (2 sonuç) demo",
+            adsoyadpro: "📇 Ahmet KURT, TC: 29837465102, Tel: 5XX 123 45 67",
+            ailepro: "👨‍👩‍👧 Anne: Fatma, Baba: Hasan, Eş: Zeynep (demo)",
+            gsm2tc: "📞 GSM->TC: 5XX XXX XX XX => TC: 12345678901, Ad: ALİ DEMİR",
+            tc2gsm: "📞 TC->GSM: 12345678901 => 5XX 111 22 33 (demo)",
+            guncelgsm: "🔄 Güncel GSM->TC: 5XX 444 55 66 => TC: 99887766554",
+            smsbomber: "💣 SMS Bomber: Hedefe 3 test SMS gönderildi (simülasyon)",
+            nace: "📊 NACE Kodu: 62.01 - Yazılım faaliyetleri",
+            isyeriark: "🏢 İşyeri Arkadaş: Mustafa, Serap, Can (demo)",
+            isyeribilgi: "🏭 İşyeri: M3RNİS Teknoloji, Vergi: 1234567890",
+            gunceladres: "📍 İstanbul, Kadıköy, Caferağa Mah. No:12",
+            guncelhane: "🏠 Hane: Ali, Ayşe, Zeynep (3 kişi)",
+            verginoadres: "📌 Vergi No 1234567890 -> Ankara Çankaya",
+            tapubilgi: "📜 Tapu: Parsel 1234 Ada 5, Malik: Fatma Yılmaz",
+            adaparsel: "🗺️ Ada/Parsel -> TC: 1234/56 -> TC: 38475629102",
+            ibanv1: "🏦 IBAN: TR12 3456 7890 1234 -> Hesap: DEMO A.Ş.",
+            ibanv2: "🏦 IBAN V2: Ziraat Bankası, Şube:1234, Ali Veli",
+            ehliyet: "🚗 Ehliyet: B sınıfı, Cem Yılmaz, Geçerlilik:2030",
+            eokul: "🎓 E-Okul: Ecrin Demir, Atatürk İlkokulu, 3-A",
+            plakakisi: "🚘 Plaka 34 ABC 123 -> Murat Kaya, İstanbul",
+            tcdenarac: "🚙 TC: 12345678901 araç: 06 ABC 12 (Renault Clio)",
+            plakaceza: "⚠️ Ceza: 1 adet park cezası, 450 TL",
+            plakafoto: "📸 Araç Foto: gri volvo xc90 (demo link)",
+            asisorgu: "💉 Aşı: 2 doz Biontech + hatırlatma",
+            engelli: "♿ Engelli Raporu: %42 oran, geçici",
+            rapor: "📋 Sağlık Raporu: Normal değerler (demo)",
+            kimlikolustur: "🆔 Oluşturuldu: Zeynep Kaya, TC: 12345678901"
+        };
+        let msg = data[action] || `"${action}" sorgusu çalıştı (demo veri)`;
+        if (inputVal) msg += ` | Girdi: ${inputVal}`;
+        return msg;
+    }
+
+    let activeGsmCard = null;
+
+    function buildUI() {
+        const grid = document.getElementById('toolsGrid');
+        grid.innerHTML = '';
+        modules.forEach((mod, idx) => {
+            const card = document.createElement('div');
+            card.className = 'tool-card';
+            card.setAttribute('data-module', idx);
+            const headerColor = mod.color || '#7c3aed';
+            card.innerHTML = `
+                <div class="card-header" style="border-left: 4px solid ${headerColor};">
+                    <i class="fas ${mod.icon}" style="color:${headerColor};"></i> ${mod.name}
+                </div>
+                <div class="card-buttons" id="btns-${idx}"></div>
+                <div class="gsm-input-row" id="gsmRow-${idx}" style="display:none;">
+                    <input type="text" id="gsmInput-${idx}" placeholder="Telefon / TC girin...">
+                    <button id="gsmExec-${idx}">SORGULA</button>
+                </div>
+                <div class="result-box" id="result-${idx}"></div>
+            `;
+            grid.appendChild(card);
+
+            const btnContainer = document.getElementById(`btns-${idx}`);
+            mod.tools.forEach(tool => {
+                const btn = document.createElement('button');
+                btn.className = `tool-btn ${tool.type === 'free' ? 'free' : 'premium'}`;
+                btn.innerText = tool.label;
+                btn.setAttribute('data-action', tool.action);
+                btn.setAttribute('data-module-idx', idx);
+                btnContainer.appendChild(btn);
+            });
+
+            // input alanı kontrolü
+            if (mod.hasInput) {
+                const row = document.getElementById(`gsmRow-${idx}`);
+                const execBtn = document.getElementById(`gsmExec-${idx}`);
+                const inputField = document.getElementById(`gsmInput-${idx}`);
+                execBtn.addEventListener('click', () => {
+                    const val = inputField ? inputField.value : '';
+                    const activeAction = card.getAttribute('data-active-action');
+                    if (!activeAction) {
+                        showResultInCard(idx, "Önce bir GSM butonuna tıklayın!", true);
+                        return;
+                    }
+                    const resp = getDemoResponse(activeAction, val);
+                    showResultInCard(idx, resp);
+                    row.style.display = 'none';
+                    card.removeAttribute('data-active-action');
+                });
+            }
+
+            // butonlara tıklama
+            const btns = card.querySelectorAll('.tool-btn');
+            btns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const action = btn.getAttribute('data-action');
+                    const moduleIdx = parseInt(btn.getAttribute('data-module-idx'));
+                    const currentModule = modules[moduleIdx];
+                    if (currentModule.hasInput && (action === 'gsm2tc' || action === 'tc2gsm' || action === 'guncelgsm' || action === 'smsbomber')) {
+                        // tüm diğer gsm satırlarını gizle
+                        document.querySelectorAll('.gsm-input-row').forEach(r => r.style.display = 'none');
+                        const targetRow = document.getElementById(`gsmRow-${moduleIdx}`);
+                        if (targetRow) {
+                            targetRow.style.display = 'flex';
+                            card.setAttribute('data-active-action', action);
+                            const inputField = document.getElementById(`gsmInput-${moduleIdx}`);
+                            if (inputField) inputField.value = '';
+                        }
+                        return;
+                    }
+                    // normal direkt demo
+                    const resp = getDemoResponse(action);
+                    showResultInCard(moduleIdx, resp);
+                });
+            });
+        });
+    }
+
+    function showResultInCard(cardIdx, message, isError = false) {
+        const resultDiv = document.getElementById(`result-${cardIdx}`);
+        if (resultDiv) {
+            resultDiv.style.display = 'block';
+            resultDiv.style.background = isError ? '#2a121f' : '#0a0e18';
+            resultDiv.style.borderLeftColor = isError ? '#f97316' : '#8b5cf6';
+            resultDiv.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-database'}"></i> ${message}`;
+            setTimeout(() => {
+                // sonuç kalıcı olabilir
+            }, 100);
+        }
+    }
+
+    // Mobil sidebar işlemleri
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuToggle = document.getElementById('menuToggleBtn');
+    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
+    }
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+    }
+    if (menuToggle) menuToggle.addEventListener('click', openSidebar);
+    if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    // Sayfa yükle
+    buildUI();
+
+    // Menü tıklamalarında sidebar kapat (isteğe bağlı)
+    const allMenuItems = document.querySelectorAll('.menu-item');
+    allMenuItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 767) closeSidebar();
+        });
+    });
+</script>
+</body>
+</html>
