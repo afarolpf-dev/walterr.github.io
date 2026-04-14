@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>M3RNİS SYSTEM | Premium Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0c12;
+            font-family: 'Inter', sans-serif;
+            color: #eef2ff;
+        }
+
+        /* MOBİL UYUMLU - SOL MENU SABİT */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR - fotoğraftaki gibi sol menü */
+        .sidebar {
+            width: 280px;
+            background: #0f1119;
+            border-right: 1px solid #1e2432;
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo-area {
+            padding: 24px 20px;
+            border-bottom: 1px solid #1e2432;
+        }
+
+        .logo-area h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c084fc, #60a5fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo-area span {
+            font-size: 0.7rem;
+            color: #6c7a91;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* KULLANICI KARTI */
+        .user-card {
+            background: #0b0d14;
+            margin: 16px 12px;
+            padding: 16px;
+            border-radius: 20px;
+            border: 1px solid #252e3f;
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .user-row i {
+            color: #f97316;
+            font-size: 1.2rem;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .badge-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .premium-badge {
+            background: #7c3aed20;
+            color: #c084fc;
+            border: 1px solid #7c3aed40;
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .level-badge {
+            background: #1e2a3a;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        /* MENÜ KATEGORİLERİ */
+        .menu-category {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 16px 24px 6px 24px;
+            color: #5e6f8d;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            padding: 10px 20px;
+            margin: 2px 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #b9c3db;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 1.1rem;
+        }
+
+        .menu-item:hover {
+            background: #1a1f2c;
+            color: white;
+        }
+
+        /* ANA İÇERİK */
+        .main-content {
+            flex: 1;
+            background: #0b0d14;
+            padding: 20px 24px;
+            overflow-y: auto;
+        }
+
+        /* DUYURU BANNER */
+        .announcement {
+            background: #11141f;
+            border-left: 4px solid #f97316;
+            padding: 14px 20px;
+            border-radius: 16px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.8rem;
+        }
+
+        .date-badge {
+            background: #1e293b;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+        }
+
+        /* MODÜL KARTLARI - fotoğraftaki gibi */
+        .modules-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .module-card {
+            background: #0f1119;
+            border: 1px solid #1e2432;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .module-header {
+            padding: 14px 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            border-bottom: 1px solid #1e2432;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #0d0f17;
+        }
+
+        .module-header i {
+            width: 24px;
+        }
+
+        .module-buttons {
+            padding: 14px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tool-btn {
+            background: #1a1f2c;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #cddcff;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .tool-btn.free {
+            background: #1f2a3e;
+            color: #9bb4ff;
+        }
+
+        .tool-btn.premium {
+            background: linear-gradient(145deg, #2a1e44, #1e1738);
+            border: 1px solid #7c3aed80;
+        }
+
+        .tool-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* GSM INPUT ALANI */
+        .gsm-input-area {
+            display: none;
+            padding: 8px 16px 16px 16px;
+            gap: 10px;
+        }
+
+        .gsm-input-area input {
+            flex: 1;
+            background: #07090f;
+            border: 1px solid #2a3142;
+            padding: 10px 14px;
+            border-radius: 40px;
+            color: white;
+            font-family: inherit;
+            font-size: 0.8rem;
+        }
+
+        .gsm-input-area button {
+            background: #3b2c5e;
+            border: none;
+            padding: 0 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .result-area {
+            margin: 8px 16px 16px 16px;
+            background: #00000030;
+            padding: 12px;
+            border-radius: 16px;
+            font-size: 0.7rem;
+            color: #a5b4fc;
+            display: none;
+            border-left: 3px solid #7c3aed;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.65rem;
+            color: #3e4a66;
+            padding: 16px;
+            border-top: 1px solid #1a1f2a;
+        }
+
+        /* MOBİL UYUM */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                z-index: 1000;
+                transition: 0.3s;
+                height: 100%;
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                z-index: 999;
+                display: none;
+            }
+            .overlay.open {
+                display: block;
+            }
+            .menu-toggle-btn {
+                display: flex;
+                background: #1a1f2c;
+                border: none;
+                color: white;
+                padding: 10px 16px;
+                border-radius: 40px;
+                font-size: 0.9rem;
+                gap: 8px;
+                align-items: center;
+                cursor: pointer;
+                margin-bottom: 16px;
+            }
+            .main-content {
+                padding: 16px;
+            }
+            .announcement {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .menu-toggle-btn {
+                display: none;
+            }
+            .overlay {
+                display: none !important;
+            }
+        }
+
+        .close-sidebar {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .close-sidebar {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="overlay" id="overlay"></div>
+<div class="app-container">
+    <!-- SOL MENU - fotoğraftaki gibi -->
+    <div class="sidebar" id="sidebar">
+        <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+        <div class="logo-area">
+            <h2>M3RNİS SYSTEM</h2>
+            <span>premium panel v2</span>
+        </div>
+        <div class="user-card">
+            <div class="user-row">
+                <i class="fas fa-heart"></i>
+                <span class="user-name">1gNvtvw</span>
+            </div>
+            <div class="badge-row">
+                <span class="premium-badge"><i class="fas fa-crown"></i> PREMIUM ÜYE</span>
+                <span class="level-badge">LVL 1 • 0 EXP</span>
+            </div>
+        </div>
+
+        <div class="menu-category">KOMUTA MERKEZİ</div>
+        <div class="menu-item"><i class="fas fa-home"></i> Ana Sayfa</div>
+        <div class="menu-item"><i class="fas fa-chart-line"></i> Sıralama</div>
+
+        <div class="menu-category">TİCARET</div>
+        <div class="menu-item"><i class="fas fa-store"></i> Mağaza İşlemleri</div>
+
+        <div class="menu-category">AÇIK KAYNAK</div>
+        <div class="menu-item"><i class="fas fa-code-branch"></i> Bilgi Sistem ></div>
+
+        <div class="menu-category">PREMIUM PANEL</div>
+        <div class="menu-item"><i class="fas fa-tools"></i> Ek Araçlar ></div>
+        <div class="menu-item"><i class="fas fa-user-secret"></i> Kişi Sorgu (TR) ></div>
+
+        <div class="menu-category">GSM ÇÖZÜMLERİ</div>
+        <div class="menu-item"><i class="fas fa-sim-card"></i> GSM Çözümleri ></div>
+        <div class="menu-item"><i class="fas fa-file-invoice-dollar"></i> Maliye & SGK ></div>
+        <div class="menu-item"><i class="fas fa-map-pin"></i> Adres & Konum ></div>
+        <div class="menu-item"><i class="fas fa-draw-polygon"></i> Arazi & Tapu ></div>
+        <div class="menu-item"><i class="fas fa-university"></i> Banka (IBAN) ></div>
+        <div class="menu-item"><i class="fas fa-id-card"></i> Vesika ></div>
+        <div class="menu-item"><i class="fas fa-car"></i> Araç & Plaka ></div>
+        <div class="menu-item"><i class="fas fa-hospital-user"></i> Sağlık & Meb ></div>
+
+        <div class="menu-item" style="margin-top: 20px;"><i class="fas fa-cog"></i> Hesap Ayarları</div>
+    </div>
+
+    <!-- ANA İÇERİK -->
+    <div class="main-content">
+        <button class="menu-toggle-btn" id="menuToggle"><i class="fas fa-bars"></i> MENÜ</button>
+
+        <div class="announcement">
+            <span><i class="fas fa-bullhorn"></i> MENÜ SOLDADIR ORDAN KULLANABİLİRSİNİZ.</span>
+            <span class="date-badge"><i class="far fa-calendar-alt"></i> 08 Nis 2026, 22:17</span>
+        </div>
+
+        <div class="modules-grid" id="modulesGrid"></div>
+
+        <div class="footer">
+            <i class="fas fa-shield-alt"></i> M3RNİS SYSTEM • Demo Panel • Tüm veriler örnektir
+        </div>
+    </div>
+</div>
+
+<script>
+    // MODÜLLER - fotoğraftaki gibi düzen
+    const modules = [
+        { name: "Bilgi Sistem", icon: "fa-check-circle", color: "#22c55e", tools: [
+            { label: "TC Bilgi [FREE]", action: "tcbilgi", type: "free" },
+            { label: "Ad Soyad Bilgi [FREE]", action: "adsoyad", type: "free" }
+        ]},
+        { name: "PREMIUM PANEL", icon: "fa-star", color: "#eab308", tools: [
+            { label: "Ek Araçlar ✔", action: "ektools", type: "premium" }
+        ]},
+        { name: "Kişi Sorgu (TR)", icon: "fa-users", color: "#8b5cf6", tools: [
+            { label: "Ad İle Bilgi", action: "adile", type: "premium" },
+            { label: "Ad Soyad Pro", action: "adsoyadpro", type: "premium" },
+            { label: "Aile Pro Bilgi", action: "ailepro", type: "premium" }
+        ]},
+        { name: "GSM Çözümleri", icon: "fa-mobile-alt", color: "#10b981", tools: [
+            { label: "GSM -> TC", action: "gsm2tc", type: "premium" },
+            { label: "TC -> GSM", action: "tc2gsm", type: "premium" },
+            { label: "Güncel GSM -> TC", action: "guncelgsm", type: "premium" },
+            { label: "SMS Bomber Pro", action: "smsbomber", type: "premium" }
+        ], hasInput: true },
+        { name: "Maliye & SGK", icon: "fa-chart-line", color: "#f97316", tools: [
+            { label: "Nace Kodu Sorgu", action: "nace", type: "premium" },
+            { label: "İşyeri Arkadaşı", action: "isyeriark", type: "premium" },
+            { label: "İşyeri Bilgi", action: "isyeribilgi", type: "premium" }
+        ]},
+        { name: "Adres & Konum", icon: "fa-location-dot", color: "#3b82f6", tools: [
+            { label: "Güncel Adres", action: "gunceladres", type: "premium" },
+            { label: "Güncel Hane", action: "guncelhane", type: "premium" },
+            { label: "Vergi No Bilgi", action: "verginoadres", type: "premium" }
+        ]},
+        { name: "Arazi & Tapu", icon: "fa-draw-polygon", color: "#a855f7", tools: [
+            { label: "Tapu Bilgi", action: "tapubilgi", type: "premium" },
+            { label: "Ada Parsel -> TC", action: "adaparsel", type: "premium" }
+        ]},
+        { name: "Banka (IBAN)", icon: "fa-credit-card", color: "#ec489a", tools: [
+            { label: "IBAN Çözümle V1", action: "ibanv1", type: "premium" },
+            { label: "IBAN Çözümle V2", action: "ibanv2", type: "premium" }
+        ]},
+        { name: "Vesika", icon: "fa-id-card", color: "#14b8a6", tools: [
+            { label: "Ehliyet Vesika", action: "ehliyet", type: "premium" },
+            { label: "E Okul Vesika", action: "eokul", type: "premium" }
+        ]},
+        { name: "Araç & Plaka", icon: "fa-car", color: "#f43f5e", tools: [
+            { label: "Plakadan Kişi", action: "plakakisi", type: "premium" },
+            { label: "TC'den Araç", action: "tcdenarac", type: "premium" },
+            { label: "Plakadan Ceza/Men", action: "plakaceza", type: "premium" },
+            { label: "Plakadan Araç Foto", action: "plakafoto", type: "premium" }
+        ]},
+        { name: "Sağlık & Meb", icon: "fa-hospital-user", color: "#06b6d4", tools: [
+            { label: "Aşı Sorgu", action: "asisorgu", type: "premium" },
+            { label: "Engelli Rapor Sorgu", action: "engelli", type: "premium" },
+            { label: "Rapor Sorgu", action: "rapor", type: "premium" },
+            { label: "Kimlik Oluşturucu", action: "kimlikolustur", type: "premium" }
+        ]}
+    ];
+
+    // DEMO CEVAPLARI
+    function demoResponse(action, inputVal = "") {
+        const data = {
+            tcbilgi: "✅ TC: 12345678901 | Ad: MEHMET DEMİR | Baba: ALİ | Doğum: 1990",
+            adsoyad: "✅ AHMET YILMAZ - TC: 10987654321, İstanbul 1995",
+            ektools: "🛠️ Ek Araçlar: Link ile Canlı Konum Takibi [NEW] | Kimlik Arşivi Pro",
+            adile: "👤 Ad ile eşleşenler: Emre Kaya, Emre Şahin (demo)",
+            adsoyadpro: "📇 Ahmet KURT, TC: 29837465102, Telefon: 5XX XXX XX XX",
+            ailepro: "👨‍👩‍👧‍👦 Aile: Anne Fatma, Baba Hasan, Eş Zeynep",
+            gsm2tc: "📞 GSM->TC: 5XX XXX XX XX => TC: 12345678901, ALİ DEMİR",
+            tc2gsm: "📞 TC->GSM: 12345678901 => 5XX 111 22 33",
+            guncelgsm: "🔄 Güncel GSM: 5XX 444 55 66 => TC: 99887766554",
+            smsbomber: "💣 SMS Bomber: Hedefe 3 test SMS gönderildi (demo)",
+            nace: "📊 NACE Kodu: 62.01 - Yazılım faaliyetleri",
+            isyeriark: "🏢 İşyeri Arkadaşı: Mustafa, Serap, Can",
+            isyeribilgi: "🏭 İşyeri: ABC Teknoloji, Vergi No: 1234567890",
+            gunceladres: "📍 İstanbul, Kadıköy, Caferağa Mah. No:12",
+            guncelhane: "🏠 Hane: Ali, Ayşe, Zeynep (3 kişi)",
+            verginoadres: "📌 Vergi No -> Adres: Ankara Çankaya, Örnek Sokak",
+            tapubilgi: "📜 Tapu: Parsel 1234 Ada 5, Malik: Fatma Yılmaz",
+            adaparsel: "🗺️ Ada Parsel -> TC: 1234/56 -> TC: 38475629102",
+            ibanv1: "🏦 IBAN: TR12 3456 7890 1234 -> Hesap: DEMO A.Ş.",
+            ibanv2: "🏦 IBAN V2: Ziraat Bankası, Şube:1234, Ali Veli",
+            ehliyet: "🚗 Ehliyet Vesika: B sınıfı, Cem Yılmaz",
+            eokul: "🎓 E Okul Vesika: Ecrin Demir, Atatürk İlkokulu",
+            plakakisi: "🚘 Plakadan Kişi: 34 ABC 123 -> Murat Kaya",
+            tcdenarac: "🚙 TC'den Araç: 12345678901 -> 06 ABC 12 Renault",
+            plakaceza: "⚠️ Plakadan Ceza: 1 adet park cezası, 450 TL",
+            plakafoto: "📸 Plakadan Araç Foto: gri volvo xc90 (demo)",
+            asisorgu: "💉 Aşı Sorgu: 2 doz Biontech + hatırlatma",
+            engelli: "♿ Engelli Raporu: %42 oran, geçici",
+            rapor: "📋 Rapor Sorgu: Tüm değerler normal",
+            kimlikolustur: "🆔 Kimlik Oluşturucu: Zeynep Kaya, TC: 12345678901"
+        };
+        let msg = data[action] || `${action} sorgusu çalıştı (demo)`;
+        if(inputVal) msg += ` | Girdi: ${inputVal}`;
+        return msg;
+    }
+
+    // Grid oluştur
+    const grid = document.getElementById('modulesGrid');
+    
+    modules.forEach((mod, idx) => {
+        const card = document.createElement('div');
+        card.className = 'module-card';
+        card.setAttribute('data-module-idx', idx);
+        
+        let buttonsHtml = '';
+        mod.tools.forEach(tool => {
+            buttonsHtml += `<button class="tool-btn ${tool.type}" data-action="${tool.action}">${tool.label}</button>`;
+        });
+        
+        card.innerHTML = `
+            <div class="module-header">
+                <i class="fas ${mod.icon}" style="color:${mod.color}"></i>
+                <span>${mod.name}</span>
+            </div>
+            <div class="module-buttons" id="btns-${idx}">
+                ${buttonsHtml}
+            </div>
+            <div class="gsm-input-area" id="gsmArea-${idx}">
+                <input type="text" id="gsmInput-${idx}" placeholder="Telefon / TC girin...">
+                <button id="gsmExec-${idx}">SORGULA</button>
+            </div>
+            <div class="result-area" id="result-${idx}"></div>
+        `;
+        grid.appendChild(card);
+        
+        // Butonlara tıklama
+        const btns = document.querySelectorAll(`#btns-${idx} .tool-btn`);
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.getAttribute('data-action');
+                // GSM input gerekiyorsa
+                if (mod.hasInput && (action === 'gsm2tc' || action === 'tc2gsm' || action === 'guncelgsm' || action === 'smsbomber')) {
+                    // tüm GSM alanlarını gizle
+                    document.querySelectorAll('.gsm-input-area').forEach(area => area.style.display = 'none');
+                    const gsmArea = document.getElementById(`gsmArea-${idx}`);
+                    if (gsmArea) {
+                        gsmArea.style.display = 'flex';
+                        card.setAttribute('data-active-action', action);
+                        const inputField = document.getElementById(`gsmInput-${idx}`);
+                        if(inputField) inputField.value = '';
+                    }
+                    return;
+                }
+                // normal demo
+                const resp = demoResponse(action);
+                const resultDiv = document.getElementById(`result-${idx}`);
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<i class="fas fa-info-circle"></i> ${resp}`;
+                // GSM alanını gizle
+                const gsmArea = document.getElementById(`gsmArea-${idx}`);
+                if(gsmArea) gsmArea.style.display = 'none';
+            });
+        });
+        
+        // GSM exec butonu
+        const execBtn = document.getElementById(`gsmExec-${idx}`);
+        if(execBtn) {
+            execBtn.addEventListener('click', () => {
+                const activeAction = card.getAttribute('data-active-action');
+                if(!activeAction) {
+                    const resultDiv = document.getElementById(`result-${idx}`);
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Önce bir GSM butonuna tıklayın!`;
+                    return;
+                }
+                const inputVal = document.getElementById(`gsmInput-${idx}`)?.value || '';
+                const resp = demoResponse(activeAction, inputVal);
+                const resultDiv = document.getElementById(`result-${idx}`);
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<i class="fas fa-database"></i> ${resp}`;
+                const gsmArea = document.getElementById(`gsmArea-${idx}`);
+                if(gsmArea) gsmArea.style.display = 'none';
+                card.removeAttribute('data-active-action');
+            });
+        }
+    });
+
+    // Mobil menü işlemleri
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuToggle = document.getElementById('menuToggle');
+    const closeSidebar = document.getElementById('closeSidebar');
+    
+    function openMenu() {
+        sidebar.classList.add('open');
+        overlay.classList.add('open');
+    }
+    function closeMenu() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+    }
+    
+    if(menuToggle) menuToggle.addEventListener('click', openMenu);
+    if(closeSidebar) closeSidebar.addEventListener('click', closeMenu);
+    if(overlay) overlay.addEventListener('click', closeMenu);
+    
+    // Menü item'lerine tıklayınca mobilde kapat
+    const menuItems = document.querySelectorAll('.menu-item');
+    menuItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if(window.innerWidth <= 768) closeMenu();
+        });
+    });
+</script>
+</body>
+</html>
