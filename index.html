@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WRW Yönetim Paneli</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0b0e11;
+            --sidebar-bg: #15191c;
+            --accent-color: #00f294; /* Görseldeki yeşil tonu */
+            --text-color: #e0e0e0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- Yan Menü (Sidebar) --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .profile-section {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .profile-img {
+            width: 70px;
+            height: 70px;
+            background: #2a2e33;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+
+        .profile-name { font-weight: bold; font-size: 1.1rem; }
+        .profile-rank { color: var(--accent-color); font-size: 0.8rem; margin-top: 5px; }
+
+        .menu-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 0;
+        }
+
+        .menu-label {
+            padding: 10px 25px;
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            color: #b0b0b0;
+            text-decoration: none;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+            border-left-color: var(--accent-color);
+        }
+
+        .menu-item i { width: 25px; margin-right: 10px; }
+
+        /* --- Alt Menü (Dropdown) --- */
+        .has-submenu .submenu {
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+            padding-left: 15px;
+        }
+
+        .has-submenu.open .submenu { display: block; }
+        .submenu .menu-item { font-size: 0.9rem; padding: 10px 25px; }
+
+        /* --- Ana İçerik --- */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+        }
+
+        .card-title {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            background: var(--accent-color);
+            color: #000;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        /* Mobil Uyumluluk */
+        @media (max-width: 768px) {
+            .sidebar { display: none; } /* Basitlik için mobilde gizledim */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img"><i class="fas fa-user"></i></div>
+            <div class="profile-name">WRW_User</div>
+            <div class="profile-rank">♡ PREMIUM ÜYE</div>
+        </div>
+
+        <div class="menu-container">
+            <div class="menu-label">KOMUTA MERKEZİ</div>
+            <a href="#" class="menu-item active"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="#" class="menu-item"><i class="fas fa-trophy"></i> Sıralama</a>
+
+            <div class="menu-label">PREMIUM PANEL</div>
+            
+            <div class="has-submenu">
+                <div class="menu-item" onclick="toggleSub(this)">
+                    <i class="fas fa-search"></i> Kişi Sorgu (TR) <i class="fas fa-chevron-down" style="margin-left: auto; font-size: 0.8rem;"></i>
+                </div>
+                <div class="submenu">
+                    <a href="#" class="menu-item">Ad İle Bilgi</a>
+                    <a href="#" class="menu-item">Ad Soyad Pro <span class="badge">V2</span></a>
+                </div>
+            </div>
+
+            <div class="has-submenu">
+                <div class="menu-item" onclick="toggleSub(this)">
+                    <i class="fas fa-mobile-alt"></i> GSM Çözümleri <i class="fas fa-chevron-down" style="margin-left: auto; font-size: 0.8rem;"></i>
+                </div>
+                <div class="submenu">
+                    <a href="#" class="menu-item">GSM -> TC</a>
+                    <a href="#" class="menu-item">SMS Bomber Pro</a>
+                </div>
+            </div>
+
+            <a href="#" class="menu-item"><i class="fas fa-university"></i> Maliye & SGK</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h2>SİSTEM DUYURULAR</h2>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-bullhorn"></i> MENÜ ERİŞİM BİLGİSİ</h3>
+            <p style="line-height: 1.6; color: #ccc;">
+                Menü soldadır oradan kullanabilirsiniz. Herhangi bir sorunda teknik ekibimize destek talebi açabilirsiniz. Keyifli kullanımlar dileriz.
+            </p>
+            <hr style="margin: 15px 0; opacity: 0.1;">
+            <div style="font-size: 0.8rem; color: #666; display: flex; justify-content: space-between;">
+                <span>14 Nis 2026, 21:50</span>
+                <span style="color: var(--accent-color);">SİSTEM HABERİ</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Alt menüleri açıp kapatan fonksiyon
+        function toggleSub(element) {
+            const parent = element.parentElement;
+            parent.classList.toggle('open');
+            
+            // İkonu döndür
+            const icon = element.querySelector('.fa-chevron-down');
+            if(parent.classList.contains('open')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
+</body>
+</html>
