@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Veri Sorgu Paneli</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #0a0c10;
+            color: #e0e6ed;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            gap: 0;
+        }
+
+        /* ===================== SIDEBAR ===================== */
+        .sidebar {
+            width: 280px;
+            background-color: #11141a;
+            border-radius: 0 20px 20px 0;
+            box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #1e88e5 #11141a;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #11141a;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #1e88e5;
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #2196f3;
+        }
+
+        /* User Card */
+        .user-card {
+            padding: 24px 16px;
+            border-bottom: 1px solid rgba(30, 136, 229, 0.2);
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.05) 0%, rgba(33, 150, 243, 0.02) 100%);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e88e5 0%, #2196f3 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 12px;
+            box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+        }
+
+        .user-name {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .user-badge {
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .user-level {
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background-color: #1f2937;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 15%;
+            background: linear-gradient(90deg, #1e88e5 0%, #2196f3 100%);
+            border-radius: 2px;
+        }
+
+        /* Menu */
+        .menu {
+            flex: 1;
+            padding: 16px 0;
+        }
+
+        .menu-section {
+            margin-bottom: 0;
+        }
+
+        .menu-title {
+            padding: 12px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            user-select: none;
+            cursor: default;
+        }
+
+        .menu-item {
+            padding: 10px 16px;
+            font-size: 13px;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            border-left: 3px solid transparent;
+            user-select: none;
+        }
+
+        .menu-item:hover {
+            color: #1e88e5;
+            background-color: rgba(30, 136, 229, 0.1);
+            border-left-color: #1e88e5;
+            text-shadow: 0 0 8px rgba(30, 136, 229, 0.3);
+        }
+
+        .menu-item.active {
+            color: #2196f3;
+            background-color: rgba(30, 136, 229, 0.15);
+            border-left-color: #2196f3;
+            font-weight: 600;
+        }
+
+        .menu-item.expandable {
+            padding-right: 24px;
+        }
+
+        .menu-item .icon {
+            width: 16px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .menu-item .expand-icon {
+            position: absolute;
+            right: 16px;
+            width: 12px;
+            height: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .menu-badge {
+            margin-left: auto;
+            padding: 2px 6px;
+            background-color: rgba(244, 63, 94, 0.2);
+            color: #f43f5e;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .menu-badge.free {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .submenu {
+            display: none;
+            background-color: rgba(31, 41, 55, 0.5);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .submenu.show {
+            display: block;
+            max-height: 500px;
+        }
+
+        .submenu-item {
+            padding: 8px 16px 8px 40px;
+            font-size: 12px;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .submenu-item:hover {
+            color: #1e88e5;
+            background-color: rgba(30, 136, 229, 0.1);
+            border-left-color: #1e88e5;
+        }
+
+        .submenu-item.active {
+            color: #2196f3;
+            background-color: rgba(30, 136, 229, 0.15);
+            border-left-color: #2196f3;
+            font-weight: 600;
+        }
+
+        /* ===================== MAIN CONTENT ===================== */
+        .main-content {
+            flex: 1;
+            background-color: #0f1117;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .main-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background: #0f1117;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: #1e88e5;
+            border-radius: 3px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(30, 136, 229, 0.2);
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .breadcrumb strong {
+            color: #2196f3;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background-color: rgba(30, 136, 229, 0.1);
+            color: #2196f3;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .icon-button:hover {
+            background-color: rgba(30, 136, 229, 0.2);
+            box-shadow: 0 0 12px rgba(30, 136, 229, 0.3);
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background-color: #f43f5e;
+            border-radius: 50%;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+            flex: 1;
+        }
+
+        /* Query Card */
+        .query-card {
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+            border: 1px solid rgba(30, 136, 229, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .query-card:hover {
+            border-color: rgba(30, 136, 229, 0.5);
+            box-shadow: 0 8px 24px rgba(30, 136, 229, 0.15);
+        }
+
+        .query-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .query-card-subtitle {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #d1d5db;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: rgba(31, 41, 55, 0.8);
+            border: 1px solid rgba(30, 136, 229, 0.3);
+            border-radius: 8px;
+            color: #e0e6ed;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2196f3;
+            background-color: rgba(31, 41, 55, 0.95);
+            box-shadow: 0 0 12px rgba(33, 150, 243, 0.3);
+        }
+
+        .form-input::placeholder {
+            color: #6b7280;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e88e5 0%, #2196f3 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(30, 136, 229, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: rgba(30, 136, 229, 0.1);
+            color: #2196f3;
+            border: 1px solid rgba(30, 136, 229, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(30, 136, 229, 0.2);
+            border-color: rgba(30, 136, 229, 0.5);
+        }
+
+        /* Result Card */
+        .result-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .result-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .result-label {
+            font-size: 11px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-size: 13px;
+            color: #10b981;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* History Panel */
+        .history-panel {
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+            border: 1px solid rgba(30, 136, 229, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            max-height: 500px;
+        }
+
+        .history-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #d1d5db;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .history-item {
+            padding: 8px 10px;
+            background-color: rgba(30, 136, 229, 0.1);
+            border-radius: 6px;
+            font-size: 11px;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 2px solid rgba(30, 136, 229, 0.3);
+            word-break: break-all;
+        }
+
+        .history-item:hover {
+            background-color: rgba(30, 136, 229, 0.15);
+            color: #2196f3;
+            border-left-color: #2196f3;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: #6b7280;
+            font-size: 11px;
+            padding: 20px 0;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 16px;
+            background-color: rgba(30, 136, 229, 0.95);
+            color: white;
+            border-radius: 8px;
+            font-size: 13px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast.success {
+            background-color: rgba(16, 185, 129, 0.95);
+        }
+
+        .toast.warning {
+            background-color: rgba(245, 158, 11, 0.95);
+        }
+
+        .toast.error {
+            background-color: rgba(239, 68, 68, 0.95);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            color: #4b5563;
+            margin-bottom: 16px;
+        }
+
+        .empty-state-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d1d5db;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-text {
+            font-size: 13px;
+            color: #9ca3af;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <!-- User Card -->
+            <div class="user-card">
+                <div class="user-avatar">👤</div>
+                <div class="user-name">1gNvtvw</div>
+                <div class="user-badge">💚 PREMIUM ÜYE</div>
+                <div class="user-level">LVL 1 • 0 EXP</div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <nav class="menu">
+                <!-- TICARET -->
+                <div class="menu-section">
+                    <div class="menu-title">TİCARET</div>
+                    <div class="menu-item" data-service="magaza-islemleri">
+                        <span class="icon">📦</span>
+                        <span>Mağaza İşlemleri</span>
+                    </div>
+                </div>
+
+                <!-- AÇIK KAYNAK -->
+                <div class="menu-section">
+                    <div class="menu-title">AÇIK KAYNAK</div>
+                    <div class="menu-item" data-service="tc-bilgi">
+                        <span class="icon">🆔</span>
+                        <span>TC Bilgi</span>
+                        <span class="menu-badge free">FREE</span>
+                    </div>
+                    <div class="menu-item" data-service="ad-soyad-bilgi">
+                        <span class="icon">👤</span>
+                        <span>Ad Soyad Bilgi</span>
+                        <span class="menu-badge free">FREE</span>
+                    </div>
+                </div>
+
+                <!-- PREMIUM PANEL -->
+                <div class="menu-section">
+                    <div class="menu-title">PREMIUM PANEL</div>
+                    <div class="menu-item" data-service="canli-konum">
+                        <span class="icon">📍</span>
+                        <span>Link ile Canlı Konum</span>
+                        <span class="menu-badge">NEW</span>
+                    </div>
+                    <div class="menu-item" data-service="kimlik-arsivi">
+                        <span class="icon">📂</span>
+                        <span>Kimlik Arşivi Pro</span>
+                    </div>
+                </div>
+
+                <!-- KİŞİ SORGU -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">👥</span>
+                        <span>Kişi Sorgu (TR)</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="ad-ile-bilgi">Ad İle Bilgi</div>
+                        <div class="submenu-item" data-service="ad-soyad-pro">Ad Soyad Pro</div>
+                        <div class="submenu-item" data-service="aile-pro">Aile Pro Bilgi</div>
+                    </div>
+                </div>
+
+                <!-- GSM ÇÖZÜMLERİ -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">📱</span>
+                        <span>GSM Çözümleri</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="gsm-tc">GSM → TC</div>
+                        <div class="submenu-item" data-service="tc-gsm">TC → GSM</div>
+                        <div class="submenu-item" data-service="guncel-gsm-tc">Güncel GSM → TC</div>
+                        <div class="submenu-item" data-service="guncel-tc-gsm">Güncel TC → GSM</div>
+                        <div class="submenu-item" data-service="sms-bomber">SMS Bomber Pro</div>
+                    </div>
+                </div>
+
+                <!-- MALİYE & SGK -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">💼</span>
+                        <span>Maliye & SGK</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="nace-sorgu">Nace Kodu Sorgu</div>
+                        <div class="submenu-item" data-service="isyeri-arkadasi">İşyeri Arkadaşı</div>
+                        <div class="submenu-item" data-service="isyeri-bilgi">İşyeri Bilgi</div>
+                        <div class="submenu-item" data-service="sigorta-mustehak">Sigorta / Müstehak</div>
+                    </div>
+                </div>
+
+                <!-- ADRES & KONUM -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">🗺️</span>
+                        <span>Adres & Konum</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="guncel-adres">Güncel Adres</div>
+                        <div class="submenu-item" data-service="guncel-hane">Güncel Hane</div>
+                        <div class="submenu-item" data-service="vergi-no-bilgi">Vergi No Bilgi</div>
+                        <div class="submenu-item" data-service="hane-adres-2023">2023 Hane/Adres</div>
+                        <div class="submenu-item" data-service="vergi-no-adres">Vergi No → Adres</div>
+                        <div class="submenu-item" data-service="sokak-bina">Sokak/Bina Bilgi</div>
+                    </div>
+                </div>
+
+                <!-- ARAZİ & TAPU -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">🏡</span>
+                        <span>Arazi & Tapu</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="tapu-bilgi">Tapu Bilgi</div>
+                        <div class="submenu-item" data-service="ada-parsel-tc">Ada Parsel → TC</div>
+                    </div>
+                </div>
+
+                <!-- BANKA -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">🏦</span>
+                        <span>Banka (IBAN)</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="iban-v1">IBAN Çözümle V1</div>
+                        <div class="submenu-item" data-service="iban-v2">IBAN Çözümle V2</div>
+                    </div>
+                </div>
+
+                <!-- VESİKA -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">🎫</span>
+                        <span>Vesika</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="ehliyet-vesika">Ehliyet Vesika</div>
+                        <div class="submenu-item" data-service="e-okul-vesika">E Okul Vesika</div>
+                    </div>
+                </div>
+
+                <!-- ARAÇ & PLAKA -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">🚗</span>
+                        <span>Araç & Plaka</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="plakadan-kisi">Plakadan Kişi</div>
+                        <div class="submenu-item" data-service="tcdn-arac">TC'den Araç</div>
+                        <div class="submenu-item" data-service="plakadan-ceza">Plakadan Ceza/Men</div>
+                        <div class="submenu-item" data-service="plakadan-foto">Plakadan Araç Foto</div>
+                    </div>
+                </div>
+
+                <!-- SAĞLIK & MEB -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">🏥</span>
+                        <span>Sağlık & Meb</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="asi-sorgu">Aşı Sorgu</div>
+                        <div class="submenu-item" data-service="engelli-rapor">Engelli Rapor Sorgu</div>
+                        <div class="submenu-item" data-service="rapor-sorgu">Rapor Sorgu</div>
+                        <div class="submenu-item" data-service="kimlik-olusturucu">Kimlik Oluşturucu</div>
+                    </div>
+                </div>
+
+                <!-- INSTAGRAM ÇÖZÜMLERİ -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">📷</span>
+                        <span>Instagram Çözümleri</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="ig-gizli-profil">Gizli Profil Görüntüleme</div>
+                        <div class="submenu-item" data-service="ig-sizinti">Instagram Sızması</div>
+                        <div class="submenu-item" data-service="ig-dm-takip">DM Mesaj Takibi</div>
+                        <div class="submenu-item" data-service="ig-gizli-hikaye">Gizli Hikaye İzleme</div>
+                    </div>
+                </div>
+
+                <!-- TIKTOK ÇÖZÜMLERİ -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">🎵</span>
+                        <span>TikTok Çözümleri</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="tiktok-gizli-profil">Gizli Profil Görüntüleme</div>
+                        <div class="submenu-item" data-service="tiktok-sizinti">TikTok Sızması</div>
+                    </div>
+                </div>
+
+                <!-- WHATSAPP ÇÖZÜMLERİ -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">💬</span>
+                        <span>WhatsApp Çözümleri</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="whatsapp-sizinti">WhatsApp Sızması</div>
+                        <div class="submenu-item" data-service="silinen-mesajlar">Silinen Mesajları Kurtar</div>
+                    </div>
+                </div>
+
+                <!-- POLNET -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">🚨</span>
+                        <span>Polnet</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="scil-sorgu">Scil Sorgu</div>
+                        <div class="submenu-item" data-service="kom-arsiv">Kom Arşiv Sorgu</div>
+                        <div class="submenu-item" data-service="tem-arsiv">Tem Arşiv Sorgu</div>
+                        <div class="submenu-item" data-service="gozalti-sorgu">Gözaltı Sorgu</div>
+                    </div>
+                </div>
+
+                <!-- CANLI TAKİP & GPS -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">🛰️</span>
+                        <span>Canlı Takip & GPS</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="canli-konum-numara">Numaradan Canlı Konum</div>
+                        <div class="submenu-item" data-service="gecmis-konum">Geçmiş Konum Hareketleri</div>
+                    </div>
+                </div>
+
+                <!-- CİHAZ KONTROL -->
+                <div class="menu-section">
+                    <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+                        <span class="icon">🎮</span>
+                        <span>Cihaz Kontrol (RAT)</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item" data-service="mikrofon-dinleme">Mikrofon Dinleme</div>
+                        <div class="submenu-item" data-service="dosya-yonetim">Dosya Yöneticisi Erişimi</div>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <div class="breadcrumb">
+                        <i class="fas fa-home"></i>
+                        <span> / </span>
+                        <strong id="breadcrumb-text">Seçim Yapınız</strong>
+                    </div>
+                </div>
+                <div class="top-bar-right">
+                    <button class="icon-button" title="Bildirimler">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-dot"></div>
+                    </button>
+                    <button class="icon-button" title="Ayarlar">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="icon-button" title="Profil">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="content-grid">
+                <!-- Query Panel -->
+                <div id="query-panel">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div class="empty-state-title">Hoş Geldiniz</div>
+                        <div class="empty-state-text">Sol menüden bir hizmet seçerek başlayın ve sorgularınızı yapın.</div>
+                    </div>
+                </div>
+
+                <!-- History Panel -->
+                <div class="history-panel">
+                    <div class="history-title">⏱️ Son İşlemler</div>
+                    <div class="history-list" id="history-list">
+                        <div class="history-empty">Henüz işlem yok</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ======================== STATE ========================
+        const state = {
+            currentService: null,
+            history: JSON.parse(localStorage.getItem('queryHistory')) || []
+        };
+
+        // ======================== SERVICE CONFIG ========================
+        const serviceConfig = {
+            'magaza-islemleri': {
+                title: 'Mağaza İşlemleri',
+                fields: [
+                    { label: 'Mağaza Adı', placeholder: 'Örn: Elektronik Dükkanı', icon: '🏪' },
+                    { label: 'Kategori', placeholder: 'Örn: Elektronik', icon: '📦' }
+                ],
+                results: {
+                    'Mağaza Adı': 'Elektronik Dükkanı',
+                    'Kategori': 'Elektronik',
+                    'Telefon': '+90 555 123 45 67',
+                    'Adres': 'İstanbul, Fatih'
+                }
+            },
+            'tc-bilgi': {
+                title: 'TC Bilgi (Açık Kaynak)',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🆔' }
+                ],
+                results: {
+                    'Ad': 'Ahmet',
+                    'Soyad': 'Yılmaz',
+                    'Doğum Tarihi': '01.01.1990',
+                    'Cinsiyet': 'Erkek'
+                }
+            },
+            'ad-soyad-bilgi': {
+                title: 'Ad Soyad Bilgi (Açık Kaynak)',
+                fields: [
+                    { label: 'Ad Soyad', placeholder: 'Örn: Ahmet Yılmaz', icon: '👤' }
+                ],
+                results: {
+                    'Ad': 'Ahmet',
+                    'Soyad': 'Yılmaz',
+                    'Şehir': 'İstanbul',
+                    'İlçe': 'Fatih'
+                }
+            },
+            'canli-konum': {
+                title: 'Link ile Canlı Konum Takibi',
+                fields: [
+                    { label: 'Konum Linki', placeholder: 'Örn: https://maps.google.com/?...', icon: '📍' }
+                ],
+                results: {
+                    'Enlem': '41.0154',
+                    'Boylam': '28.9758',
+                    'Konum': 'İstanbul',
+                    'Güncelleme': 'Canlı'
+                }
+            },
+            'kimlik-arsivi': {
+                title: 'Kimlik Arşivi Pro',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🆔' }
+                ],
+                results: {
+                    'Arşiv Tarihi': '01.01.2023',
+                    'Durum': 'Aktif',
+                    'İşlem Sayısı': '42',
+                    'Son Güncelleme': '15.03.2024'
+                }
+            },
+            'ad-ile-bilgi': {
+                title: 'Ad İle Bilgi',
+                fields: [
+                    { label: 'Ad Soyad', placeholder: 'Örn: Mehmet Kaya', icon: '👥' }
+                ],
+                results: {
+                    'Ad': 'Mehmet',
+                    'Soyad': 'Kaya',
+                    'Doğum Tarihi': '15.06.1985',
+                    'Şehir': 'Ankara'
+                }
+            },
+            'ad-soyad-pro': {
+                title: 'Ad Soyad Pro',
+                fields: [
+                    { label: 'Ad Soyad', placeholder: 'Örn: Fatih Terim', icon: '👥' }
+                ],
+                results: {
+                    'Ad': 'Fatih',
+                    'Soyad': 'Terim',
+                    'T.C. No': 'XX XXX XXXX',
+                    'Meslek': 'Gizli'
+                }
+            },
+            'aile-pro': {
+                title: 'Aile Pro Bilgi',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '👥' }
+                ],
+                results: {
+                    'Aile Üyesi 1': 'Ahmet Yılmaz',
+                    'Aile Üyesi 2': 'Ayşe Yılmaz',
+                    'Aile Üyesi 3': 'Ali Yılmaz',
+                    'Toplam Üye': '3'
+                }
+            },
+            'gsm-tc': {
+                title: 'GSM → TC',
+                fields: [
+                    { label: 'Telefon Numarası', placeholder: 'Örn: 5551234567', icon: '📱' }
+                ],
+                results: {
+                    'Telefon': '+90 555 123 45 67',
+                    'T.C. No': 'XX XXX XXXX',
+                    'Ad Soyad': 'Gizli',
+                    'Son Kullanım': '01.04.2024'
+                }
+            },
+            'tc-gsm': {
+                title: 'TC → GSM',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '📱' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Telefon': '+90 555 123 45 67',
+                    'Operatör': 'Türk Telekom',
+                    'Başlama Tarihi': '15.03.2020'
+                }
+            },
+            'guncel-gsm-tc': {
+                title: 'Güncel GSM → TC',
+                fields: [
+                    { label: 'Telefon Numarası', placeholder: 'Örn: 5551234567', icon: '📱' }
+                ],
+                results: {
+                    'Telefon': '+90 555 123 45 67',
+                    'T.C. No': 'XX XXX XXXX',
+                    'Güncelleme Tarihi': '01.04.2024',
+                    'Durum': 'Aktif'
+                }
+            },
+            'guncel-tc-gsm': {
+                title: 'Güncel TC → GSM',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '📱' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Telefon': '+90 555 123 45 67',
+                    'Güncelleme': '01.04.2024',
+                    'Doğrulama': 'Başarılı'
+                }
+            },
+            'sms-bomber': {
+                title: 'SMS Bomber Pro',
+                fields: [
+                    { label: 'Telefon Numarası', placeholder: 'Örn: 5551234567', icon: '📱' },
+                    { label: 'Mesaj Sayısı', placeholder: 'Örn: 10', icon: '💬' }
+                ],
+                results: {
+                    'Hedef Numara': '+90 555 123 45 67',
+                    'Mesaj Sayısı': '10',
+                    'Durum': 'Tamamlandı',
+                    'SMS Gönderimi': '10/10'
+                }
+            },
+            'nace-sorgu': {
+                title: 'Nace Kodu Sorgu',
+                fields: [
+                    { label: 'Nace Kodu', placeholder: 'Örn: 4711', icon: '💼' }
+                ],
+                results: {
+                    'Nace Kodu': '4711',
+                    'Sektör': 'Perakende Ticaret',
+                    'Açıklama': 'Gıda ve İçki Satış',
+                    'Kategori': 'Ticaret'
+                }
+            },
+            'isyeri-arkadasi': {
+                title: 'İşyeri Arkadaşı',
+                fields: [
+                    { label: 'İşyeri Adı', placeholder: 'Örn: ABC Ltd. Şti.', icon: '💼' }
+                ],
+                results: {
+                    'İşyeri': 'ABC Ltd. Şti.',
+                    'İşyeri Sahibi': 'Ahmet Yılmaz',
+                    'Faaliyette Olduğu Yer': 'İstanbul',
+                    'Kuruluş Tarihi': '01.01.2010'
+                }
+            },
+            'isyeri-bilgi': {
+                title: 'İşyeri Bilgi',
+                fields: [
+                    { label: 'Vergi No', placeholder: 'Örn: 0123456789', icon: '💼' }
+                ],
+                results: {
+                    'Vergi No': '0123456789',
+                    'İşyeri Adı': 'ABC Ltd. Şti.',
+                    'Müdür': 'Ahmet Yılmaz',
+                    'Kuruluş': '01.01.2010'
+                }
+            },
+            'sigorta-mustehak': {
+                title: 'Sigorta / Müstehak',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '💼' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Sigorta Durumu': 'Aktif',
+                    'Müstehak Ay': '12',
+                    'Ödeme Durumu': 'Güncel'
+                }
+            },
+            'guncel-adres': {
+                title: 'Güncel Adres',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🗺️' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Adres': 'İstanbul, Fatih, Merkez Mahallesi',
+                    'Posta Kodu': '34000',
+                    'Güncelleme': '01.04.2024'
+                }
+            },
+            'guncel-hane': {
+                title: 'Güncel Hane',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🗺️' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Hane Kodu': '12345',
+                    'Hane Üyesi': '4',
+                    'Güncelleme': '01.04.2024'
+                }
+            },
+            'vergi-no-bilgi': {
+                title: 'Vergi No Bilgi',
+                fields: [
+                    { label: 'Vergi No', placeholder: 'Örn: 0123456789', icon: '🗺️' }
+                ],
+                results: {
+                    'Vergi No': '0123456789',
+                    'Ad Soyad': 'Ahmet Yılmaz',
+                    'Faaliyeti': 'Ticarete Konu',
+                    'Kayıt Tarihi': '01.01.2010'
+                }
+            },
+            'hane-adres-2023': {
+                title: '2023 Hane/Adres',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🗺️' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Adres': 'İstanbul, Fatih',
+                    'İl': 'İstanbul',
+                    'Kayıt Yılı': '2023'
+                }
+            },
+            'vergi-no-adres': {
+                title: 'Vergi No → Adres',
+                fields: [
+                    { label: 'Vergi No', placeholder: 'Örn: 0123456789', icon: '🗺️' }
+                ],
+                results: {
+                    'Vergi No': '0123456789',
+                    'Adres': 'İstanbul, Fatih, Merkez Mahallesi',
+                    'İl Kodu': '34',
+                    'Posta Kodu': '34000'
+                }
+            },
+            'sokak-bina': {
+                title: 'Sokak/Bina Bilgi',
+                fields: [
+                    { label: 'Sokak Adı', placeholder: 'Örn: Vatan Caddesi', icon: '🗺️' }
+                ],
+                results: {
+                    'Sokak': 'Vatan Caddesi',
+                    'Şehir': 'İstanbul',
+                    'İlçe': 'Fatih',
+                    'Bina Sayısı': '127'
+                }
+            },
+            'tapu-bilgi': {
+                title: 'Tapu Bilgi',
+                fields: [
+                    { label: 'Tapu Numarası', placeholder: 'Örn: 123-456', icon: '🏡' }
+                ],
+                results: {
+                    'Tapu No': '123-456',
+                    'Ada': '45',
+                    'Parsel': '12',
+                    'Sahibi': 'Ahmet Yılmaz'
+                }
+            },
+            'ada-parsel-tc': {
+                title: 'Ada Parsel → TC',
+                fields: [
+                    { label: 'Ada No', placeholder: 'Örn: 45', icon: '🏡' },
+                    { label: 'Parsel No', placeholder: 'Örn: 12', icon: '🏡' }
+                ],
+                results: {
+                    'Ada': '45',
+                    'Parsel': '12',
+                    'T.C. No': 'XX XXX XXXX',
+                    'Sahibi': 'Ahmet Yılmaz'
+                }
+            },
+            'iban-v1': {
+                title: 'IBAN Çözümle V1',
+                fields: [
+                    { label: 'IBAN', placeholder: 'Örn: TR89 0001 0006 7000 7534 0830 10', icon: '🏦' }
+                ],
+                results: {
+                    'IBAN': 'TR89 0001 0006 7000 7534 0830 10',
+                    'Banka': 'Türkiye Cumhuriyet Merkez Bankası',
+                    'SWIFT': 'TCMBTR2A',
+                    'Hesap No': 'Gizli'
+                }
+            },
+            'iban-v2': {
+                title: 'IBAN Çözümle V2',
+                fields: [
+                    { label: 'IBAN', placeholder: 'Örn: TR89 0001 0006 7000 7534 0830 10', icon: '🏦' }
+                ],
+                results: {
+                    'IBAN': 'TR89 0001 0006 7000 7534 0830 10',
+                    'Ülke': 'Türkiye',
+                    'Banka Kodu': '0001',
+                    'Durum': 'Geçerli'
+                }
+            },
+            'ehliyet-vesika': {
+                title: 'Ehliyet Vesika',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🎫' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Ehliyet No': 'XX 456789',
+                    'Sınıf': 'B',
+                    'Geçerlilik': '01.01.2030'
+                }
+            },
+            'e-okul-vesika': {
+                title: 'E Okul Vesika',
+                fields: [
+                    { label: 'Öğrenci No', placeholder: 'Örn: 123456', icon: '🎫' }
+                ],
+                results: {
+                    'Öğrenci No': '123456',
+                    'Ad Soyad': 'Ali Yılmaz',
+                    'Okul': 'Merkez Ortaokulu',
+                    'Sınıf': '7-A'
+                }
+            },
+            'plakadan-kisi': {
+                title: 'Plakadan Kişi',
+                fields: [
+                    { label: 'Plaka', placeholder: 'Örn: 34ABC123', icon: '🚗' }
+                ],
+                results: {
+                    'Plaka': '34ABC123',
+                    'T.C. No': 'XX XXX XXXX',
+                    'Ad Soyad': 'Ahmet Yılmaz',
+                    'Araç Türü': 'Otomobil'
+                }
+            },
+            'tcdn-arac': {
+                title: 'TC\'den Araç',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🚗' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Plaka': '34ABC123',
+                    'Araç': 'Fiat Egea',
+                    'Yıl': '2020'
+                }
+            },
+            'plakadan-ceza': {
+                title: 'Plakadan Ceza/Men',
+                fields: [
+                    { label: 'Plaka', placeholder: 'Örn: 34ABC123', icon: '🚗' }
+                ],
+                results: {
+                    'Plaka': '34ABC123',
+                    'Toplam Ceza': '3',
+                    'Toplam Tutar': '₺2.500',
+                    'Ödeme Durumu': 'Ödenmemiş'
+                }
+            },
+            'plakadan-foto': {
+                title: 'Plakadan Araç Foto',
+                fields: [
+                    { label: 'Plaka', placeholder: 'Örn: 34ABC123', icon: '🚗' }
+                ],
+                results: {
+                    'Plaka': '34ABC123',
+                    'Araç Markası': 'Fiat',
+                    'Model': 'Egea',
+                    'Foto': 'Görüntülenemez (Demo Modu)'
+                }
+            },
+            'asi-sorgu': {
+                title: 'Aşı Sorgu',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🏥' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Aşılama Durumu': 'Tamamlandı',
+                    'Son Aşı': '01.01.2024',
+                    'Doz Sayısı': '3'
+                }
+            },
+            'engelli-rapor': {
+                title: 'Engelli Rapor Sorgu',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🏥' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Rapor Durumu': 'Yok',
+                    'Sorgu Tarihi': '01.04.2024',
+                    'İsim': 'Gizli'
+                }
+            },
+            'rapor-sorgu': {
+                title: 'Rapor Sorgu',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🏥' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Rapor': 'Harita ve Kadastro Mühendisliği',
+                    'Verilis Tarihi': '15.03.2020',
+                    'Geçerlilik': '15.03.2025'
+                }
+            },
+            'kimlik-olusturucu': {
+                title: 'Kimlik Oluşturucu',
+                fields: [
+                    { label: 'Ad', placeholder: 'Örn: Ahmet', icon: '🏥' },
+                    { label: 'Soyad', placeholder: 'Örn: Yılmaz', icon: '🏥' }
+                ],
+                results: {
+                    'Ad': 'Ahmet',
+                    'Soyad': 'Yılmaz',
+                    'Oluşturulan T.C.': 'XX XXX XXXX (Demo)',
+                    'Durum': 'Örnek'
+                }
+            },
+            'ig-gizli-profil': {
+                title: 'Gizli Profil Görüntüleme',
+                fields: [
+                    { label: 'Instagram Kullanıcı Adı', placeholder: 'Örn: @username', icon: '📷' }
+                ],
+                results: {
+                    'Kullanıcı': '@username',
+                    'Profili': 'Gizli',
+                    'İzin': 'Reddedildi',
+                    'Durum': 'Demo modu – gösterilmez'
+                }
+            },
+            'ig-sizinti': {
+                title: 'Instagram Sızması',
+                fields: [
+                    { label: 'Email', placeholder: 'Örn: example@mail.com', icon: '📷' }
+                ],
+                results: {
+                    'Email': 'example@mail.com',
+                    'Instagram': '@username',
+                    'Sızıntı': 'Tespit edilmedi',
+                    'Güvenlik': 'Güvenli'
+                }
+            },
+            'ig-dm-takip': {
+                title: 'DM Mesaj Takibi',
+                fields: [
+                    { label: 'Instagram Kullanıcı Adı', placeholder: 'Örn: @username', icon: '📷' }
+                ],
+                results: {
+                    'Kullanıcı': '@username',
+                    'Mesaj Sayısı': 'Gizli',
+                    'Son Mesaj': 'Gizli',
+                    'Durum': 'Demo modu'
+                }
+            },
+            'ig-gizli-hikaye': {
+                title: 'Gizli Hikaye İzleme',
+                fields: [
+                    { label: 'Instagram Kullanıcı Adı', placeholder: 'Örn: @username', icon: '📷' }
+                ],
+                results: {
+                    'Kullanıcı': '@username',
+                    'Hikaye': 'Gizli',
+                    'İzin': 'Reddedildi',
+                    'Durum': 'Demo modu'
+                }
+            },
+            'tiktok-gizli-profil': {
+                title: 'Gizli Profil Görüntüleme',
+                fields: [
+                    { label: 'TikTok Kullanıcı Adı', placeholder: 'Örn: @username', icon: '🎵' }
+                ],
+                results: {
+                    'Kullanıcı': '@username',
+                    'Profili': 'Gizli',
+                    'İzin': 'Reddedildi',
+                    'Durum': 'Demo modu'
+                }
+            },
+            'tiktok-sizinti': {
+                title: 'TikTok Sızması',
+                fields: [
+                    { label: 'Email', placeholder: 'Örn: example@mail.com', icon: '🎵' }
+                ],
+                results: {
+                    'Email': 'example@mail.com',
+                    'TikTok': '@username',
+                    'Sızıntı': 'Tespit edilmedi',
+                    'Güvenlik': 'Güvenli'
+                }
+            },
+            'whatsapp-sizinti': {
+                title: 'WhatsApp Sızması',
+                fields: [
+                    { label: 'Telefon Numarası', placeholder: 'Örn: 5551234567', icon: '💬' }
+                ],
+                results: {
+                    'Telefon': '+90 555 123 45 67',
+                    'Sızıntı': 'Tespit edilmedi',
+                    'Durum': 'Güvenli',
+                    'Kontrol Tarihi': '01.04.2024'
+                }
+            },
+            'silinen-mesajlar': {
+                title: 'Silinen Mesajları Kurtar',
+                fields: [
+                    { label: 'Telefon Numarası', placeholder: 'Örn: 5551234567', icon: '💬' }
+                ],
+                results: {
+                    'Telefon': '+90 555 123 45 67',
+                    'Kurtarılabilir Mesaj': 'Yok',
+                    'Durum': 'Demo modu',
+                    'Tarih': '01.04.2024'
+                }
+            },
+            'scil-sorgu': {
+                title: 'Scil Sorgu',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🚨' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Kayıt': 'Yok',
+                    'Durum': 'Temiz',
+                    'Tarih': '01.04.2024'
+                }
+            },
+            'kom-arsiv': {
+                title: 'Kom Arşiv Sorgu',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🚨' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Kayıt': 'Yok',
+                    'Arşiv': 'Boş',
+                    'Durum': 'Temiz'
+                }
+            },
+            'tem-arsiv': {
+                title: 'Tem Arşiv Sorgu',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🚨' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Kayıt': 'Yok',
+                    'Dosya': 'Boş',
+                    'Durum': 'Temiz'
+                }
+            },
+            'gozalti-sorgu': {
+                title: 'Gözaltı Sorgu',
+                fields: [
+                    { label: 'T.C. Kimlik No', placeholder: 'Örn: 12345678901', icon: '🚨' }
+                ],
+                results: {
+                    'T.C. No': 'XX XXX XXXX',
+                    'Gözaltı': 'Yok',
+                    'Durum': 'Temiz',
+                    'Tarih': '01.04.2024'
+                }
+            },
+            'canli-konum-numara': {
+                title: 'Numaradan Canlı Konum',
+                fields: [
+                    { label: 'Telefon Numarası', placeholder: 'Örn: 5551234567', icon: '🛰️' }
+                ],
+                results: {
+                    'Telefon': '+90 555 123 45 67',
+                    'Konum': 'Gizli',
+                    'Durum': 'Demo modu',
+                    'İzin': 'Reddedildi'
+                }
+            },
+            'gecmis-konum': {
+                title: 'Geçmiş Konum Hareketleri',
+                fields: [
+                    { label: 'Telefon Numarası', placeholder: 'Örn: 5551234567', icon: '🛰️' }
+                ],
+                results: {
+                    'Telefon': '+90 555 123 45 67',
+                    'Harita': 'Gizli',
+                    'Durum': 'Demo modu',
+                    'Süre': '24 saat'
+                }
+            },
+            'mikrofon-dinleme': {
+                title: 'Mikrofon Dinleme',
+                fields: [
+                    { label: 'Cihaz ID', placeholder: 'Örn: device123', icon: '🎮' }
+                ],
+                results: {
+                    'Cihaz': 'device123',
+                    'Dinleme': 'Gizli',
+                    'Durum': 'Demo modu',
+                    'İzin': 'Reddedildi'
+                }
+            },
+            'dosya-yonetim': {
+                title: 'Dosya Yöneticisi Erişimi',
+                fields: [
+                    { label: 'Cihaz ID', placeholder: 'Örn: device123', icon: '🎮' }
+                ],
+                results: {
+                    'Cihaz': 'device123',
+                    'Dosya Sistemi': 'Gizli',
+                    'Durum': 'Demo modu',
+                    'İzin': 'Reddedildi'
+                }
+            }
+        };
+
+        // ======================== FUNCTIONS ========================
+        function toggleSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('expanded');
+            submenu.classList.toggle('show');
+        }
+
+        function showToast(message, type = 'warning') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function addToHistory(service, query) {
+            const timestamp = new Date().toLocaleTimeString('tr-TR');
+            state.history.unshift({ service, query, timestamp });
+            if (state.history.length > 10) state.history.pop();
+            localStorage.setItem('queryHistory', JSON.stringify(state.history));
+            updateHistoryPanel();
+        }
+
+        function updateHistoryPanel() {
+            const historyList = document.getElementById('history-list');
+            if (state.history.length === 0) {
+                historyList.innerHTML = '<div class="history-empty">Henüz işlem yok</div>';
+            } else {
+                historyList.innerHTML = state.history.map(item => `
+                    <div class="history-item" title="${item.service}">
+                        <strong>${item.service}</strong><br>
+                        <small>${item.query}</small><br>
+                        <small style="color: #6b7280;">${item.timestamp}</small>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderQueryPanel(serviceId) {
+            const config = serviceConfig[serviceId];
+            if (!config) return;
+
+            state.currentService = serviceId;
+            const panel = document.getElementById('query-panel');
+
+            let fieldsHTML = config.fields.map((field, idx) => `
+                <div class="form-group">
+                    <label class="form-label">${field.label}</label>
+                    <input type="text" id="field-${idx}" class="form-input" placeholder="${field.placeholder}">
+                </div>
+            `).join('');
+
+            panel.innerHTML = `
+                <div class="query-card">
+                    <div class="query-card-title">
+                        <i class="fas fa-magnifying-glass"></i>
+                        ${config.title}
+                    </div>
+                    <div class="query-card-subtitle">Sorgu parametrelerini girin ve "SORGULA" butonuna tıklayın</div>
+                    
+                    <form id="query-form" onsubmit="handleQuery(event, '${serviceId}')">
+                        ${fieldsHTML}
+                        
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> SORGULA
+                            </button>
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="fas fa-redo"></i> TEMİZLE
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="result-container"></div>
+                </div>
+            `;
+
+            updateBreadcrumb(config.title);
+        }
+
+        function handleQuery(e, serviceId) {
+            e.preventDefault();
+            const config = serviceConfig[serviceId];
+            const formData = new FormData(e.target);
+            let query = '';
+
+            config.fields.forEach((field, idx) => {
+                const value = document.getElementById(`field-${idx}`).value;
+                if (value) query += value + ' ';
+            });
+
+            addToHistory(config.title, query.trim());
+            showToast('🔒 Demo modu – gerçek veri gösterilmiyor', 'warning');
+
+            // Show fake results
+            const resultContainer = document.getElementById('result-container');
+            let resultsHTML = '<div class="result-card">';
+            for (const [key, value] of Object.entries(config.results)) {
+                resultsHTML += `
+                    <div class="result-item">
+                        <div class="result-label">${key}</div>
+                        <div class="result-value">${value}</div>
+                    </div>
+                `;
+            }
+            resultsHTML += '</div>';
+            resultContainer.innerHTML = resultsHTML;
+        }
+
+        function updateBreadcrumb(serviceName) {
+            document.getElementById('breadcrumb-text').textContent = serviceName;
+        }
+
+        // ======================== EVENT LISTENERS ========================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add click listeners to all menu items
+            document.querySelectorAll('.menu-item:not(.expandable)').forEach(item => {
+                item.addEventListener('click', function() {
+                    const serviceId = this.getAttribute('data-service');
+                    renderQueryPanel(serviceId);
+                    
+                    // Update active state
+                    document.querySelectorAll('.menu-item, .submenu-item').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+
+            // Add click listeners to submenu items
+            document.querySelectorAll('.submenu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const serviceId = this.getAttribute('data-service');
+                    renderQueryPanel(serviceId);
+                    
+                    // Update active state
+                    document.querySelectorAll('.menu-item, .submenu-item').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+
+            // Initial history load
+            updateHistoryPanel();
+        });
+
+        // Add slideOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
